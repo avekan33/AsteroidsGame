@@ -16,18 +16,24 @@ public class AsteroidsGame extends PApplet {
 
 SpaceShip ship;
 Star[] yes;
+Asteroid[] belt;
 int width, height;
 public void setup() 
 {
   //your code here
-  width = 500;
-  height = 500;
+  width = 700;
+  height = 700;
   size(width,height);
   ship = new SpaceShip();
-  yes = new Star[50];
+  belt = new Asteroid[10];
+  yes = new Star[70];
   for(int i =0;i<yes.length;i++)
   {
     yes[i] = new Star();
+  }
+  for(int u =0;u<belt.length;u++)
+  {
+    belt[u] = new Asteroid();
   }
   background(0);
 }
@@ -40,6 +46,11 @@ public void draw()
   for(int j=0;j<yes.length;j++)
   {
     yes[j].show();
+  }
+  for(int p =0;p<belt.length;p++)
+  {
+    belt[p].show();
+    belt[p].move();
   }
   ship.show();
   //ship.accelerate();
@@ -67,20 +78,19 @@ public void keyPressed()
   if(key == 'h')
   {
     hyperspace(ship, yes);
-    println('h');
   }
 }
 public void hyperspace(SpaceShip dog, Star[] ye)
 {
   for(int k=0;k<ye.length;k++)
   {
-    ye[k].setX((int)(Math.random()*500));
-    ye[k].setY((int)(Math.random()*500));
+    ye[k].setX((int)(Math.random()*700));
+    ye[k].setY((int)(Math.random()*700));
   }
   dog.setDirectionX(0);
   dog.setDirectionY(0);
-  dog.setX((int)(Math.random()*500));
-  dog.setY((int)(Math.random()*500));
+  dog.setX((int)(Math.random()*700));
+  dog.setY((int)(Math.random()*700));
   dog.setPointDirection((int)(Math.random()*360));
   
 }
@@ -89,8 +99,8 @@ class Star
   private int x,y;
   Star()
   {
-    x = (int)(Math.random()*500);
-    y = (int)(Math.random()*500);
+    x = (int)(Math.random()*700);
+    y = (int)(Math.random()*700);
   }
   public void setX(int num)
   {
@@ -114,6 +124,71 @@ class Star
     ellipse(x,y,3,3);
   }
 }
+class Asteroid extends Floater
+{
+  private int myRot;
+  Asteroid()
+  {
+    corners = 4;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    xCorners[0] = -6;
+    yCorners[0] = -6;
+    xCorners[1] = 6;
+    yCorners[1] = -6;
+    xCorners[2] = 6;
+    yCorners[2] = 6;
+    xCorners[3] = -6;
+    yCorners[3] = 6;
+    myPointDirection = 0;
+    myColor = color(255);
+    myCenterX = (int)(Math.random()*700);
+    myCenterY = (int)(Math.random()*700);
+    myDirectionX = (int)(Math.random()*4 - 2);
+    if(myDirectionX == 0){myDirectionX++;}
+    myDirectionY = (int)(Math.random()*4 - 2);
+    if(myDirectionY == 0){myDirectionY++;}
+    myRot = (int)(Math.random()*10-5);
+    if(myRot == 0){myRot ++;}
+  }
+  public int getRot(){return myRot;}
+  public void setRot(int newb){myRot = newb;}
+  public void setX(int x){myCenterX = x;}
+  public int getX(){return (int)myCenterX;}
+  public void setY(int y){myCenterY = y;}
+  public int getY(){return (int)myCenterY;}
+  public void setDirectionX(double x){myDirectionX = x;} 
+  public double getDirectionX(){return myDirectionX;}
+  public void setDirectionY(double y){myDirectionY = y;}
+  public double getDirectionY(){return myDirectionY;}
+  public void setPointDirection(int degrees){myPointDirection = degrees;} 
+  public double getPointDirection(){return myPointDirection;}
+  public void move ()   //move the floater in the current direction of travel
+  {      
+    //change the x and y coordinates by myDirectionX and myDirectionY       
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;     
+
+    //wrap around screen    
+    if(myCenterX >width)
+    {     
+      myCenterX = 0;    
+    }    
+    else if (myCenterX<0)
+    {     
+      myCenterX = width;    
+    }    
+    if(myCenterY >height)
+    {    
+      myCenterY = 0;    
+    }   
+    else if (myCenterY < 0)
+    {     
+      myCenterY = height;    
+    }
+    rotate(myRot);   
+  }
+}
 class SpaceShip extends Floater  
 {   
     SpaceShip()
@@ -128,8 +203,8 @@ class SpaceShip extends Floater
       xCorners[2] = -8;
       yCorners[2] = 8;
       myColor = color(255);
-      myCenterX = 250;
-      myCenterY = 250;
+      myCenterX = 350;
+      myCenterY = 350;
       myDirectionX = 0;
       myDirectionY = 0;
       myPointDirection = 0;
