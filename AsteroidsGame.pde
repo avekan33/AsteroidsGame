@@ -1,6 +1,7 @@
 SpaceShip ship;
 Star[] yes;
-Asteroid[] belt;
+ArrayList<Asteroid> belt;
+//Asteroid test;
 int width, height;
 public void setup() 
 {
@@ -9,16 +10,20 @@ public void setup()
   height = 700;
   size(width,height);
   ship = new SpaceShip();
-  belt = new Asteroid[10];
+  belt = new ArrayList<Asteroid>();
   yes = new Star[70];
   for(int i =0;i<yes.length;i++)
   {
     yes[i] = new Star();
   }
-  for(int u =0;u<belt.length;u++)
+  for(int u =0;u<20;u++)
   {
-    belt[u] = new Asteroid();
+    belt.add(u,new Asteroid());
   }
+  /*test = new Asteroid();
+  test.setRot(0);
+  test.setX(350);
+  test.setY(350);*/
   background(0);
 }
 public void draw() 
@@ -31,14 +36,23 @@ public void draw()
   {
     yes[j].show();
   }
-  for(int p =0;p<belt.length;p++)
-  {
-    belt[p].show();
-    belt[p].move();
-  }
   ship.show();
   //ship.accelerate();
   ship.move();
+  //test.show();
+  for(int p =0;p<belt.size();p++)
+  {
+    (belt.get(p)).show();
+    if(dist(ship.getX(),ship.getY(),belt.get(p).getX(), belt.get(p).getY()) < 20)
+    {
+      belt.remove(p);
+    }
+    else
+    {
+      (belt.get(p)).move();
+    }
+  }
+  
 }
 public void keyPressed()
 {
@@ -113,17 +127,25 @@ class Asteroid extends Floater
   private int myRot;
   Asteroid()
   {
-    corners = 4;
+    corners = 8;
     xCorners = new int[corners];
     yCorners = new int[corners];
-    xCorners[0] = -6;
-    yCorners[0] = -6;
-    xCorners[1] = 6;
-    yCorners[1] = -6;
-    xCorners[2] = 6;
-    yCorners[2] = 6;
-    xCorners[3] = -6;
-    yCorners[3] = 6;
+    xCorners[0] = -12;
+    yCorners[0] = -4;
+    xCorners[1] = -6;
+    yCorners[1] = -8;
+    xCorners[2] = 0;
+    yCorners[2] = -12;
+    xCorners[3] = 6;
+    yCorners[3] = -10;
+    xCorners[4] = 12;
+    yCorners[4] = 0;
+    xCorners[5] = 10;
+    yCorners[5] = 6;
+    xCorners[6] = 0;
+    yCorners[6] = 12;
+    xCorners[7] = -8;
+    yCorners[7] = 6;
     myPointDirection = 0;
     myColor = color(255);
     myCenterX = (int)(Math.random()*700);
