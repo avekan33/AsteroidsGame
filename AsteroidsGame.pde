@@ -1,7 +1,7 @@
 SpaceShip ship;
 Star[] yes;
 ArrayList<Asteroid> belt;
-//Asteroid test;
+ArrayList<Bullet> rounds;
 int width, height;
 public void setup() 
 {
@@ -11,6 +11,7 @@ public void setup()
   size(width,height);
   ship = new SpaceShip();
   belt = new ArrayList<Asteroid>();
+  rounds = new ArrayList<Bullet>();
   yes = new Star[70];
   for(int i =0;i<yes.length;i++)
   {
@@ -20,10 +21,6 @@ public void setup()
   {
     belt.add(u,new Asteroid());
   }
-  /*test = new Asteroid();
-  test.setRot(0);
-  test.setX(350);
-  test.setY(350);*/
   background(0);
 }
 public void draw() 
@@ -39,7 +36,11 @@ public void draw()
   ship.show();
   //ship.accelerate();
   ship.move();
-  //test.show();
+  for(int y = 0;y<rounds.size();y++)
+  {
+    rounds.get(y).show();
+    rounds.get(y).move();
+  }
   for(int p =0;p<belt.size();p++)
   {
     (belt.get(p)).show();
@@ -48,9 +49,18 @@ public void draw()
       belt.remove(p);
     }
     else
-    {
+     {
       (belt.get(p)).move();
-    }
+     }
+     for(int z = 0; z<rounds.size();z++)
+    {
+       if(dist(rounds.get(z).getX(),rounds.get(z).getY(),belt.get(p).getX(), belt.get(p).getY()) < 20)
+       {
+         belt.remove(p);
+         rounds.remove(z);
+       }
+     }
+     
   }
   
 }
@@ -76,6 +86,10 @@ public void keyPressed()
   if(key == 'h')
   {
     hyperspace(ship, yes);
+  }
+  if(key == ' ')
+  {
+    rounds.add(new Bullet(ship));
   }
 }
 public void hyperspace(SpaceShip dog, Star[] ye)
@@ -125,7 +139,7 @@ class Star
 class Asteroid extends Floater
 {
   private int myRot;
-  Asteroid()
+  public Asteroid()
   {
     corners = 8;
     xCorners = new int[corners];
@@ -195,9 +209,43 @@ class Asteroid extends Floater
     rotate(myRot);   
   }
 }
+class Bullet extends Floater
+{
+  public Bullet(SpaceShip theShip)
+  {
+    myCenterX = theShip.getX();
+    myCenterY = theShip.getY();
+    myPointDirection = theShip.getPointDirection();
+    double dRadians = myPointDirection*(Math.PI/180);
+    myDirectionX = 5 * Math.cos(dRadians) + theShip.getDirectionX();
+    myDirectionY = 5 * Math.sin(dRadians) + theShip.getDirectionY();
+  }
+  public void setX(int x){myCenterX = x;}
+  public int getX(){return (int)myCenterX;}
+  public void setY(int y){myCenterY = y;}
+  public int getY(){return (int)myCenterY;}
+  public void setDirectionX(double x){myDirectionX = x;} 
+  public double getDirectionX(){return myDirectionX;}
+  public void setDirectionY(double y){myDirectionY = y;}
+  public double getDirectionY(){return myDirectionY;}
+  public void setPointDirection(int degrees){myPointDirection = degrees;} 
+  public double getPointDirection(){return myPointDirection;}
+  public void show()
+  {
+    fill(255,0,0);
+    stroke(255,0,0);
+    ellipse((float)myCenterX,(float)myCenterY,3,3);
+  }
+  public void move()
+  {
+    //change the x and y coordinates by myDirectionX and myDirectionY       
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;
+  }
+}
 class SpaceShip extends Floater  
 {   
-    SpaceShip()
+    public SpaceShip()
     {
       corners = 3;
       xCorners = new int[corners];
