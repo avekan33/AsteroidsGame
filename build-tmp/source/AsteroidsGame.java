@@ -74,9 +74,21 @@ public void draw()
        {
          belt.remove(p);
          rounds.remove(z);
+         break;
        }
      }
      
+  }
+  for(int f = 0;f<rounds.size();f++)
+  {
+    if(rounds.get(f).getX()>700 || rounds.get(f).getX()<0)
+    {
+      rounds.remove(f);
+    }
+    else if(rounds.get(f).getY()>700 || rounds.get(f).getY()<0)
+    {
+      rounds.remove(f);
+    }
   }
   
 }
