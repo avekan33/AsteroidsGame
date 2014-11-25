@@ -14,17 +14,21 @@ import java.io.IOException;
 
 public class AsteroidsGame extends PApplet {
 
-SpaceShip ship;
-Star[] yes;
-ArrayList<Asteroid> belt;
-ArrayList<Bullet> rounds;
-int width, height;
+public SpaceShip ship;
+public Star[] yes;
+public ArrayList<Asteroid> belt;
+public ArrayList<Bullet> rounds;
+public int width, height;
+public int ammoCount;
+public Crate box;
 public void setup() 
 {
   //your code here
   width = 700;
   height = 700;
+  ammoCount = 5;
   size(width,height);
+  box =  new Crate();
   ship = new SpaceShip();
   belt = new ArrayList<Asteroid>();
   rounds = new ArrayList<Bullet>();
@@ -45,6 +49,16 @@ public void draw()
   
   //your code here
   background(0);
+  box.show();
+  if(dist(ship.getX(),ship.getY(),box.getX(), box.getY()) < 20)
+  {
+    box.setX((int)(Math.random()*600)+10);
+    box.setY((int)(Math.random()*600)+10);
+    ammoCount += 3;
+  }
+  textAlign(CENTER);
+  fill(255);
+  text("Ammo Count: "+ammoCount,50,25);
   for(int j=0;j<yes.length;j++)
   {
     yes[j].show();
@@ -115,9 +129,10 @@ public void keyPressed()
   {
     hyperspace(ship, yes);
   }
-  if(key == ' ')
+  if(key == ' '&&ammoCount>0)
   {
     rounds.add(new Bullet(ship));
+    ammoCount --;
   }
 }
 public void hyperspace(SpaceShip dog, Star[] ye)
@@ -134,9 +149,23 @@ public void hyperspace(SpaceShip dog, Star[] ye)
   dog.setPointDirection((int)(Math.random()*360));
   
 }
+class Crate extends Star
+{
+  Crate()
+  {
+    x = (int)(Math.random()*600)+10;
+    y = (int)(Math.random()*600)+10;
+  }
+   public void show()
+  {
+    stroke(255,0,0);
+    fill(255,255,0);
+    rect(x,y,10,10);
+  }
+}
 class Star
 {
-  private int x,y;
+  protected int x,y;
   Star()
   {
     x = (int)(Math.random()*700);
@@ -160,6 +189,7 @@ class Star
   }
   public void show()
   {
+    stroke(255);
     fill(255);
     ellipse(x,y,3,3);
   }
